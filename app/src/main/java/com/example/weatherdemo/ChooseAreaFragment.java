@@ -17,7 +17,6 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import com.example.weatherdemo.db.City;
 import com.example.weatherdemo.db.County;
@@ -45,11 +44,11 @@ public class ChooseAreaFragment extends Fragment {
 
     private ProgressBar progressBar;
 
+    private TextView titleText;
+
     private Button backButton;
 
     private ListView listView;
-
-    private TextView titleText;
 
     private ArrayAdapter<String> adapter;
 
@@ -67,28 +66,22 @@ public class ChooseAreaFragment extends Fragment {
 
     private int currentLevel;
 
-//    @Override
-//    public void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//
-//    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view =  inflater.inflate(R.layout.fragment_choose_area, container, false);
+        View view = inflater.inflate(R.layout.fragment_choose_area, container, false);
         titleText = view.findViewById(R.id.title_text);
         backButton = view.findViewById(R.id.back_button);
         listView = view.findViewById(R.id.list_view);
         progressBar = view.findViewById(R.id.progress_bar);
-        adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1,
-                dataList);
+        adapter = new ArrayAdapter<>(getContext(), android.R.layout
+                .simple_list_item_1, dataList);
         listView.setAdapter(adapter);
         return view;
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+    public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -97,6 +90,7 @@ public class ChooseAreaFragment extends Fragment {
                     selectedProvince = provinceList.get(position);
                     queryCities();
                 } else if (currentLevel == LEVEL_CITY) {
+                    selectedCity = cityList.get(position);
                     queryCounties();
                 }
             }
@@ -169,7 +163,7 @@ public class ChooseAreaFragment extends Fragment {
             int provinceCode = selectedProvince.getProvinceCode();
             int cityCode = selectedCity.getCityCode();
             String address = "http://guolin.tech/api/china/" + provinceCode + "/"
-                    +cityCode;
+                    + cityCode;
             queryFromServer(address, "county");
         }
     }
@@ -183,7 +177,8 @@ public class ChooseAreaFragment extends Fragment {
                     @Override
                     public void run() {
                         closeProgressBar();
-                        Toast.makeText(getContext(), "加载失败", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "加载失败", Toast
+                                .LENGTH_SHORT).show();
                     }
                 });
             }
