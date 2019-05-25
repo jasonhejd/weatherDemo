@@ -4,11 +4,14 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -28,6 +31,10 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 public class WeatherActivity extends AppCompatActivity {
+
+    public DrawerLayout drawerLayout;
+
+    private Button navButton;
 
     public SwipeRefreshLayout swipeRefreshLayout;
 
@@ -65,6 +72,8 @@ public class WeatherActivity extends AppCompatActivity {
         | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
         getWindow().setStatusBarColor(Color.TRANSPARENT);
         setContentView(R.layout.activity_weather);
+        drawerLayout = findViewById(R.id.drawer_layout);
+        navButton = findViewById(R.id.nav_button);
         bingPicImg = findViewById(R.id.bing_pic_img);
         weatherLayout = findViewById(R.id.weather_layout);
         titleCity = findViewById(R.id.title_city);
@@ -78,6 +87,12 @@ public class WeatherActivity extends AppCompatActivity {
         carWashText = findViewById(R.id.car_wash_text);
         sportText = findViewById(R.id.sport_text);
         swipeRefreshLayout = findViewById(R.id.swipe_refresh);
+        navButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                drawerLayout.openDrawer(GravityCompat.START);
+            }
+        });
         swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(this,
                 R.color.colorPrimary));
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -105,7 +120,7 @@ public class WeatherActivity extends AppCompatActivity {
         }
     }
 
-    private void requestWeather(String weatherId) {
+    public void requestWeather(String weatherId) {
         String weatherUrl = "http://guolin.tech/api/weather?cityid="
                 + weatherId + "&key=f0c4377c9b3a44aa8f5f03a68e3179bc";
         HttpUtil.sendOkHttpRequest(weatherUrl, new Callback() {
